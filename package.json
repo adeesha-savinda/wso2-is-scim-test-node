@@ -1,0 +1,19 @@
+{
+  "name": "scim-test",
+  "version": "1.0.0",
+  "description": "",
+  "main": "app.js",
+  "type": "module",
+  "scripts": {
+    "start":"NODE_TLS_REJECT_UNAUTHORIZED=\"0\" node app.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Adeesha Savinda de Silva",
+  "license": "ISC",
+  "dependencies": {
+    "axios": "^0.24.0"
+  },
+  "devDependencies": {
+    "nodemon": "^2.0.15"
+  }
+}
