@@ -5,11 +5,12 @@ const URL = 'https://localhost:9443/scim2/Users/';
 const getAllUsers = async () => {
     // axios.get(url, config)
     let response = await axios.get(URL, {
-        auth: { username: 'admin', password: 'admin' }
+        auth: { username: 'admin', password: 'admin' },
+        params: {'startIndex': 1,'count': 3}
     });
 
-    await console.log('All available users: \n', response.data);
-
+    console.log('\n\nFirst 3 available users: \n', response.data);
+    console.log('\n===========================================\n');
 };
 
 const createUser = async () => {
@@ -45,7 +46,8 @@ const createUser = async () => {
         auth: { username: 'admin', password: 'admin' },
     });
 
-    await console.log('User created: \n', response.data);
+    console.log('User created: \n', response.data);
+    console.log('\n===========================================\n');
 
     return response.data.id;;
 }
@@ -57,7 +59,8 @@ const getUser = async (userId) => {
 
     let user = response.data;
 
-    await console.log('User: \n', user);
+    console.log('User: \n', user);
+    console.log('\n===========================================\n');
 };
 
 const updateUser = async (userId) => {
@@ -73,9 +76,10 @@ const updateUser = async (userId) => {
         auth: { username: 'admin', password: 'admin' },
     });
 
-    user = response.data;
+    const user = response.data;
 
-    console.log('Edited user: \n', user);
+    console.log('Updated user: \n', user);
+    console.log('\n===========================================\n');
 };
 
 const deleteUser = async (userId) => {
@@ -87,6 +91,7 @@ const deleteUser = async (userId) => {
     })
 
     console.log('User deleted: \n', response.status === 204);
+    console.log('\n===========================================\n');
 };
 
 const fn = async () => {
@@ -101,10 +106,10 @@ const fn = async () => {
         id = await createUser();
 
         // GET - get created user by ID
-        // getUser(id);
+        await getUser(id);
 
         // PUT - update previously created user
-        // updateUser(id);
+        await updateUser(id);
 
     } catch (error) {
         console.log('********************');
@@ -112,7 +117,7 @@ const fn = async () => {
     } finally {
         try {
             // DELETE - delete the created user if exists
-            // deleteUser(id);
+            await deleteUser(id);
         } catch (error) {
             console.log('********************');
             console.log(error);
@@ -121,49 +126,7 @@ const fn = async () => {
 }
 
 const test = async () => {
-    // // GET - get created user by ID
-    // const aaa = await axios.get(`https://localhost:9443/scim2/Users/d0eaf863-66bd-4827-8d1a-d70b0a82bbe5`, {
-    //     auth: { username: 'admin', password: 'admin' }
-    // });
-
-    // await console.log('----------Peter: \n', aaa.data);
-
-    // // GET - get all roles
-    // const bbb = await axios.get(`https://localhost:9443/scim2/Roles?startIndex=1`, {
-    //     auth: { username: 'admin', password: 'admin' }
-    // });
-
-    // await console.log('----------Roles: \n', bbb.data);
-
-    // // GET - get all roles
-    // const ccc = await axios.patch(`https://localhost:9443/scim2/Roles/7279a3fc-5889-44f8-a7a0-a76316cb2b24`, {
-    //     Operations: [
-    //         {
-    //             op: "add",
-    //             value: {
-    //                 users: [
-    //                     {
-    //                         display: user.username,
-    //                         value: user.id
-    //                     }
-    //                 ]
-    //             }
-    //         }
-    //     ],
-    //     schemas: [
-    //         "urn:ietf:params:scim:api:messages:2.0:PatchOp"
-    //     ]
-    // }, {
-    //     headers: {
-    //         'Content-Type': 'application/json',
-    //     },
-    //     auth: { username: 'admin', password: 'admin' },
-    // });
-
-    // await console.log('----------Roles added: \n', ccc.data);
-
-
-    // GET
+    // Change Password
     const ddd = await axios.patch(`https://localhost:9443/scim2/Me`, {
         Operations: [
             {
@@ -188,7 +151,3 @@ const test = async () => {
 
 // test();
 fn();
-
-
-// {"schemas":[],"name":{"familyName":"jackson","givenName":"kim"},"userName":"kim","password":"kimwso2","emails":[{"primary":true,"value":"kim.jackson@gmail.com","type":"home"},{"value":"kim_j@wso2.com","type":"work"}]}' --header "Content-Type:application/json"
-
