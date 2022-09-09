@@ -1,6 +1,11 @@
 import axios from 'axios';
 
-const URL = 'https://localhost:9443/scim2/Users/';
+const SERVER_HOST = 'localhost';    // WSO2 IS Host
+const SERVER_PORT = '9443';         // WSO2 IS Port
+const BASE_URL = `https://${SERVER_HOST}:${SERVER_PORT}`; // WSO2 IS Base URL
+const SCIM2_URL = `${BASE_URL}/scim2`;
+
+const URL = `${SCIM2_URL}/Users`;  // SCIM 2.0 Users URL
 
 const getAllUsers = async () => {
     // axios.get(url, config)
@@ -53,7 +58,7 @@ const createUser = async () => {
 }
 
 const getUser = async (userId) => {
-    let response = await axios.get(`${URL}${userId}`, {
+    let response = await axios.get(`${URL}/${userId}`, {
         auth: { username: 'admin', password: 'admin' }
     });
 
@@ -65,7 +70,7 @@ const getUser = async (userId) => {
 
 const updateUser = async (userId) => {
     // axios.put(url, data, config)
-    let response = await axios.put(`${URL}${userId}`, {
+    let response = await axios.put(`${URL}/${userId}`, {
         userName: "thor",
         // change the username from thor to thor123
         name: { givenName: "thor123" },
@@ -83,7 +88,7 @@ const updateUser = async (userId) => {
 };
 
 const deleteUser = async (userId) => {
-    const response = await axios.delete(`https://localhost:9443/scim2/Users/${userId}`, {
+    const response = await axios.delete(`${URL}/${userId}`, {
         headers: {
             'Accept': 'application/scim+json',
         },
@@ -125,28 +130,35 @@ const fn = async () => {
     }
 }
 
+// Use this function to test out any requirement
 const test = async () => {
-    // Change Password
-    const ddd = await axios.patch(`https://localhost:9443/scim2/Me`, {
-        Operations: [
-            {
-                op: "add",
-                value: {
-                    "password": "Stark123$"
+    try {
+        // Change Password flow
+        const response = await axios.patch(`${SCIM2_URL}/Me`, {
+            Operations: [
+                {
+                    op: "add",
+                    value: {
+                        "password": "123Tony$"
+                    }
                 }
-            }
-        ],
-        schemas: [
-            "urn:ietf:params:scim:api:messages:2.0:PatchOp"
-        ]
-    }, {
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        auth: { username: 'tony', password: '123Tony$' },
-    });
+            ],
+            schemas: [
+                "urn:ietf:params:scim:api:messages:2.0:PatchOp"
+            ]
+        }, {
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            auth: { username: 'tony', password: '123tony4' },
+        });
+    
+        console.log('Changed Password of User: \n', response.data);
 
-    await console.log('----------Roles added: \n', ddd.data);
+    } catch (error) {
+        console.log('********************');
+        console.log(error.message);
+    } 
 }
 
 // test();
